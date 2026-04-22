@@ -1,6 +1,7 @@
 package br.com.alura.adopet.api.service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -8,6 +9,7 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
+import br.com.alura.adopet.api.exception.ValidacaoException;
 import br.com.alura.adopet.api.model.Adocao;
 import br.com.alura.adopet.api.model.StatusAdocao;
 import br.com.alura.adopet.api.repository.AdocaoRepository;
@@ -23,18 +25,20 @@ public class AdocaoService {
 
     public void solicitar(Adocao adocao) {
         if (adocao.getPet().getAdotado() == true) {
-            //REQUISIÇÕES E RESPOSTAS SÃO DE RESPONSABILIDADE DA CLASSE CONTROLLER:
-            return ResponseEntity.badRequest().body("Pet já foi adotado!");
+            throw new ValidacaoException("Pet já foi adotado!");
+
         } else {
             List<Adocao> adocoes = repository.findAll();
             for (Adocao a : adocoes) {
                 if (a.getTutor() == adocao.getTutor() && a.getStatus() == StatusAdocao.AGUARDANDO_AVALIACAO) {
-                    return ResponseEntity.badRequest().body("Tutor já possui outra adoção aguardando avaliação!");
+                    throw new ValidacaoException("Tutor já possui outra adoção aguardando avaliação!");
+
                 }
             }
             for (Adocao a : adocoes) {
                 if (a.getPet() == adocao.getPet() && a.getStatus() == StatusAdocao.AGUARDANDO_AVALIACAO) {
-                    return ResponseEntity.badRequest().body("Pet já está aguardando avaliação para ser adotado!");
+
+                    throw new ValidacaoException("Pet já está aguardando avaliação para ser adotado!");
                 }
             }
             for (Adocao a : adocoes) {
@@ -43,7 +47,7 @@ public class AdocaoService {
                     contador = contador + 1;
                 }
                 if (contador == 5) {
-                    return ResponseEntity.badRequest().body("Tutor chegou ao limite máximo de 5 adoções!");
+                    throw new ValidacaoException("Tutor chegou ao limite máximo de 5 adoções!");
                 }
             }
         }
@@ -59,8 +63,6 @@ public class AdocaoService {
                 + "!\n\nUma solicitação de adoção foi registrada hoje para o pet: " + adocao.getPet().getNome()
                 + ". \nFavor avaliar para aprovação ou reprovação.");
         emailSender.send(email);
-
-        return ResponseEntity.ok().build();
 
     }
 
