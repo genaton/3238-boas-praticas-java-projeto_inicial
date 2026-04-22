@@ -2,18 +2,28 @@ package br.com.alura.adopet.api.service;
 
 import java.time.LocalDateTime;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 import br.com.alura.adopet.api.model.Adocao;
 import br.com.alura.adopet.api.model.StatusAdocao;
+import br.com.alura.adopet.api.repository.AdocaoRepository;
 
 @Service
 public class AdocaoService {
 
-    public void solicitar(){
-if (adocao.getPet().getAdotado() == true) {
+    @Autowired
+    private AdocaoRepository repository;
+
+    @Autowired
+    private JavaMailSender emailSender;
+
+    public void solicitar(Adocao adocao) {
+        if (adocao.getPet().getAdotado() == true) {
+            //REQUISIÇÕES E RESPOSTAS SÃO DE RESPONSABILIDADE DA CLASSE CONTROLLER:
             return ResponseEntity.badRequest().body("Pet já foi adotado!");
         } else {
             List<Adocao> adocoes = repository.findAll();
@@ -45,19 +55,20 @@ if (adocao.getPet().getAdotado() == true) {
         email.setFrom("adopet@email.com.br");
         email.setTo(adocao.getPet().getAbrigo().getEmail());
         email.setSubject("Solicitação de adoção");
-        email.setText("Olá " +adocao.getPet().getAbrigo().getNome() +"!\n\nUma solicitação de adoção foi registrada hoje para o pet: " +adocao.getPet().getNome() +". \nFavor avaliar para aprovação ou reprovação.");
+        email.setText("Olá " + adocao.getPet().getAbrigo().getNome()
+                + "!\n\nUma solicitação de adoção foi registrada hoje para o pet: " + adocao.getPet().getNome()
+                + ". \nFavor avaliar para aprovação ou reprovação.");
         emailSender.send(email);
 
         return ResponseEntity.ok().build();
-        
 
     }
 
-    public void aprovar(){
+    public void aprovar() {
 
     }
 
-    public void reprovar(){
+    public void reprovar() {
 
     }
 

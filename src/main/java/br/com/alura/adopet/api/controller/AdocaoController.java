@@ -3,6 +3,7 @@ package br.com.alura.adopet.api.controller;
 import br.com.alura.adopet.api.model.Adocao;
 import br.com.alura.adopet.api.model.StatusAdocao;
 import br.com.alura.adopet.api.repository.AdocaoRepository;
+import br.com.alura.adopet.api.service.AdocaoService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -22,14 +23,13 @@ import java.util.List;
 public class AdocaoController {
 
     @Autowired
-    private AdocaoRepository repository;
+    private AdocaoService adocaoService;
 
-    @Autowired
-    private JavaMailSender emailSender;
-
+  
     @PostMapping
     @Transactional
     public ResponseEntity<String> solicitar(@RequestBody @Valid Adocao adocao) {
+        this.adocaoService.solicitar(adocao);
         
         
     }
