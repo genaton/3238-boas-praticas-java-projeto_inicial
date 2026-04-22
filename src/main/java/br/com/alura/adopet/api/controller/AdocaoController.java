@@ -20,6 +20,9 @@ public class AdocaoController {
 
     @PostMapping
     @Transactional
+
+//NÃO É UMA BOA PRÁTICA RECEBER ENTIDADES JPA NA CLASSE CONTROLLER DEVIDO A SEGURANCA, QUANTIDADE DE ATRIBUTOS, ETC.
+//DEVE-SE CRIAR UMA NOVA CLASSE SÓ PARA REPRESENTAR APENAS OS DADOS QUE QUEREMOS QUE CHEGUEM NO CONTROLER.
     public ResponseEntity<String> solicitar(@RequestBody @Valid Adocao adocao) {
 
         try {
