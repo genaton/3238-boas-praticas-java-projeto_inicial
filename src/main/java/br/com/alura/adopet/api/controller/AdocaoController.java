@@ -30,6 +30,7 @@ public class AdocaoController {
     @PostMapping
     @Transactional
     public ResponseEntity<String> solicitar(@RequestBody @Valid Adocao adocao) {
+        //ABAIXO VEMOS CODIGOS DE REGRA DE NEGÓCIOS. NÃO É ADEQUADO PARA CLASSES CONTROLLER
         if (adocao.getPet().getAdotado() == true) {
             return ResponseEntity.badRequest().body("Pet já foi adotado!");
         } else {
