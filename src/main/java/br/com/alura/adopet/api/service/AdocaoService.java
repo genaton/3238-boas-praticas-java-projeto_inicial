@@ -1,5 +1,6 @@
 package br.com.alura.adopet.api.service;
 
+import br.com.alura.adopet.api.controller.AbrigoController;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -17,11 +18,17 @@ import br.com.alura.adopet.api.repository.AdocaoRepository;
 @Service
 public class AdocaoService {
 
+    private final AbrigoController abrigoController;
+
     @Autowired
     private AdocaoRepository repository;
 
     @Autowired
     private JavaMailSender emailSender;
+
+    AdocaoService(AbrigoController abrigoController) {
+        this.abrigoController = abrigoController;
+    }
 
     public void solicitar(Adocao adocao) {
         if (adocao.getPet().getAdotado() == true) {
@@ -54,6 +61,10 @@ public class AdocaoService {
         adocao.setData(LocalDateTime.now());
         adocao.setStatus(StatusAdocao.AGUARDANDO_AVALIACAO);
         repository.save(adocao);
+
+        // PROBLEMA: ESTA CLASSE ESTÁ CUIDANDO DE ENVIO DE EMAILS E PROVAVELMENTE SURGIRAO NOVAS REGRAS QUE EXIJAM O MESMO MÉTODO.
+        //PARA EVITAR A DUPLICACAO DE CÓDIGO IREMOS CRIAR UMA CLASSE QUE CUIDA DISSO COM EXCLUSIVIDADE.
+        
 
         SimpleMailMessage email = new SimpleMailMessage();
         email.setFrom("adopet@email.com.br");
