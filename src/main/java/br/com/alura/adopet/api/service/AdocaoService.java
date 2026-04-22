@@ -1,6 +1,10 @@
 package br.com.alura.adopet.api.service;
 
 import br.com.alura.adopet.api.controller.AbrigoController;
+import br.com.alura.adopet.api.dto.AprovacaoAdocaoDTO;
+import br.com.alura.adopet.api.dto.ReprovacaoAdocaoDTO;
+import br.com.alura.adopet.api.dto.SolicitacaoAdocaoDTO;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -24,7 +28,7 @@ public class AdocaoService {
     @Autowired
     private EmailService emailService;
 
-    public void solicitar(Adocao adocao) {
+    public void solicitar(SolicitacaoAdocaoDTO dto) {
         if (adocao.getPet().getAdotado() == true) {
             throw new ValidacaoException("Pet já foi adotado!");
 
@@ -63,7 +67,7 @@ public class AdocaoService {
                         + ". \nFavor avaliar para aprovação ou reprovação.");
     }
 
-    public void aprovar(Adocao adocao) {
+    public void aprovar(AprovacaoAdocaoDTO dto) {
         adocao.setStatus(StatusAdocao.APROVADO);
         repository.save(adocao);
         emailService.enviarEmail(adocao.getPet().getAbrigo().getEmail(),
@@ -74,7 +78,7 @@ public class AdocaoService {
 
     }
 
-    public void reprovar(Adocao adocao) {
+    public void reprovar(ReprovacaoAdocaoDTO dto) {
         adocao.setStatus(StatusAdocao.REPROVADO);
         repository.save(adocao);
 
