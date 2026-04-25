@@ -53,11 +53,11 @@ public class AdocaoService {
        
         adocaoRepository.save(adocao);
 
-        emailService.enviarEmail(adocao.getPet().getAbrigo().getEmail(),
-                "Solicitação de adoção",
-                "Olá " + adocao.getPet().getAbrigo().getNome()
-                        + "!\n\nUma solicitação de adoção foi registrada hoje para o pet: " + adocao.getPet().getNome()
-                        + ". \nFavor avaliar para aprovação ou reprovação.");
+        // emailService.enviarEmail(adocao.getPet().getAbrigo().getEmail(),
+        //         "Solicitação de adoção",
+        //         "Olá " + adocao.getPet().getAbrigo().getNome()
+        //                 + "!\n\nUma solicitação de adoção foi registrada hoje para o pet: " + adocao.getPet().getNome()
+        //                 + ". \nFavor avaliar para aprovação ou reprovação.");
     }
 
     public void aprovar(AprovacaoAdocaoDTO dto) {
